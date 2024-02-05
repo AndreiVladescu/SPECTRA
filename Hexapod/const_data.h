@@ -44,8 +44,8 @@ const float HOME_X[6] = { 82.0, 0.0, -82.0, -82.0, 0.0, 82.0 };  //coxa-to-toe h
 const float HOME_Y[6] = { 82.0, 116.0, 82.0, -82.0, -116.0, -82.0 };
 const float HOME_Z[6] = { -80.0, -80.0, -80.0, -80.0, -80.0, -80.0 };
 
-const float BODY_X[6] = { 110.4, 0.0, -110.4, -110.4, 0.0, 110.4 };  //body center-to-coxa servo distances
-const float BODY_Y[6] = { 58.4, 90.8, 58.4, -58.4, -90.8, -58.4 };
+const float BODY_X[6] = { 122.8, 0.0, -122.8, -122.8, 0.0, 122.8 };  //body center-to-coxa servo distances
+const float BODY_Y[6] = { 69.8, 107.5, 69.8, -69.8, -107.5, -69.8 };
 const float BODY_Z[6] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
 const int COXA_CAL[6] = { 2, -1, -1, -3, -2, -3 };  //servo calibration constants
