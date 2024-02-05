@@ -23,7 +23,8 @@ int gait_speed;
 int gait_LED_color;
 int reset_position;
 int capture_offsets;
-byte byte_packet[4];  //packet with command
+uint8_t command;  //current read command
+uint8_t checksum; //checksum read from command
 
 int batt_LEDs;  //battery monitor variables
 int batt_voltage;
@@ -93,7 +94,7 @@ Servo tibia6_servo;
 void setup() {
   //start serial
   Serial.begin(115200);
-  Serial.setTimeout(1);
+  Serial.setTimeout(10);
 
   //attach servos
   coxa1_servo.attach(COXA1_SERVO, 610, 2400);
@@ -144,9 +145,7 @@ void loop() {
   if ((currentTime - previousTime) > FRAME_TIME_MS) {
     previousTime = currentTime;
 
-    //read controller and process inputs
-    //ps2x.read_gamepad(false, gamepad_vibrate);
-    //process_gamepad();
+    get_commands();
 
     //reset legs to home position when commanded
     if (reset_position == true) {
@@ -170,7 +169,6 @@ void loop() {
       leg6_IK_control = true;
     }
 
-    get_commands();
     //process modes (mode 0 is default 'home idle' do-nothing mode)
     if (mode == 1)  //walking mode
     {
@@ -190,26 +188,52 @@ void loop() {
 // Process serial inputs
 //***********************************************************************
 void get_commands() {
-  //if (Serial.read() < 4)
-  //  return;
-
-  Serial.readBytes(byte_packet, sizeof(byte_packet));
-
-  uint8_t checksum = byte_packet[0] ^ byte_packet[1] ^ byte_packet[2];
-  if (checksum != byte_packet[3])
+  uint8_t check = 0;
+  if (!Serial.available())
     return;
+  command = Serial.read();
+  switch (command) {
+  case 1:
+  //move motors
+    commandedX = Serial.read();
+    commandedY = Serial.read();
+    commandedR = Serial.read();
+    checksum = Serial.read();
 
-  Serial.println(commandedX);
-  Serial.println(commandedY);
-  Serial.println(commandedR);
+    check = command ^ commandedX ^ commandedY ^ commandedR;
+    if (!checksum_verification(check))
+      return;
 
-  commandedX = map(byte_packet[0], 0, 255, 127, -127);
-  commandedY = map(byte_packet[1], 0, 255, -127, 127);
-  commandedR = map(byte_packet[2], 0, 255, 127, -127);
+    commandedX = map(commandedX, 0, 255, 127, -127);
+    commandedY = map(commandedY, 0, 255, -127, 127);
+    commandedR = map(commandedR, 0, 255, 127, -127);
+    break;
+  case 2:
+      //change gait
+      uint8_t temp_gait = Serial.read();
+      checksum = Serial.read();
 
-  Serial.println(commandedX);
-  Serial.println(commandedY);
-  Serial.println(commandedR);
+      check = command ^ temp_gait;
+      if (!checksum_verification(check))
+        return;
+
+      gait = temp_gait;
+      break;
+    }
+
+}
+
+//***********************************************************************
+// CRC verification
+//***********************************************************************
+bool checksum_verification(uint8_t check){
+  //TODO CRC-8 AUTOSAR
+    if (checksum != check)
+    {
+      Serial.println("Error of checksum");
+      return false;
+    }
+    return true;
 }
 
 //***********************************************************************
