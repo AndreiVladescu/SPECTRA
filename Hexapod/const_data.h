@@ -48,6 +48,6 @@ const float BODY_X[6] = { 122.8, 0.0, -122.8, -122.8, 0.0, 122.8 };  //body cent
 const float BODY_Y[6] = { 69.8, 107.5, 69.8, -69.8, -107.5, -69.8 };
 const float BODY_Z[6] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-const int COXA_CAL[6] = { 2, -1, -1, -3, -2, -3 };  //servo calibration constants
-const int FEMUR_CAL[6] = { 4, -2, 0, -1, 0, 0 };
-const int TIBIA_CAL[6] = { 0, -3, -3, -2, -3, -1 };
+const int COXA_CAL[6] = { 0, 0, 0, 0, 0, 0 };  //servo calibration constants
+const int FEMUR_CAL[6] = { 0, 0, 0, 0, 0, 0 };
+const int TIBIA_CAL[6] = { 0, 0, 0, 0, 0, 0 };
