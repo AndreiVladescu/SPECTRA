@@ -3,13 +3,6 @@
 //***********************************************************************
 const int BATT_VOLTAGE = 0;  //12V Battery analog voltage input port
 
-const int PS2_DAT = 2;  //gamepad port definitions
-const int PS2_ATT = 3;
-const int PS2_CMD = 4;
-const int PS2_CLK = 5;
-const int RUMBLE = true;
-const int PRESSURES = false;
-
 const int COXA1_SERVO = 19;  //servo port definitions
 const int FEMUR1_SERVO = 21;
 const int TIBIA1_SERVO = 23;

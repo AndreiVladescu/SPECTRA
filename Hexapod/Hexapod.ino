@@ -95,7 +95,7 @@ void setup() {
   //start serial
   Serial.begin(115200);
   Serial.setTimeout(10);
-
+  
   //attach servos
   coxa1_servo.attach(COXA1_SERVO, 610, 2400);
   femur1_servo.attach(FEMUR1_SERVO, 610, 2400);
