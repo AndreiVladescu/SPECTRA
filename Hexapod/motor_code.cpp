@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include <math.h>
-#include <PS2X_lib.h> 
+#include <PS2X_lib.h>  //reference: http://www.billporter.info/
 
 #include "const_data.h"
 #include "motor_code.h"

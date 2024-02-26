@@ -9,6 +9,7 @@
 
 #include "tof_sensors.h"
 #include "motor_code.h"
+#include "gps.h"
 
 //***********************************************************************
 // Variable Declarations

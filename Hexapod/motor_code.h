@@ -19,6 +19,8 @@ void compute_amplitudes();
 #ifndef MOTOR_CODE_H
 #define MOTOR_CODE_H
 
+extern PS2X ps2x;  //PS2 gamepad controller
+
 extern Servo coxa1_servo;  //18 servos
 extern Servo femur1_servo;
 extern Servo tibia1_servo;
