@@ -23,8 +23,8 @@ int gait_speed;
 int gait_LED_color;
 int reset_position;
 int capture_offsets;
-uint8_t command;  //current read command
-uint8_t checksum; //checksum read from command
+uint8_t command;   //current read command
+uint8_t checksum;  //checksum read from command
 
 int batt_LEDs;  //battery monitor variables
 int batt_voltage;
@@ -95,7 +95,7 @@ void setup() {
   //start serial
   Serial.begin(115200);
   Serial.setTimeout(10);
-  
+
   //attach servos
   coxa1_servo.attach(COXA1_SERVO, 610, 2400);
   femur1_servo.attach(FEMUR1_SERVO, 610, 2400);
@@ -189,57 +189,70 @@ void loop() {
 //***********************************************************************
 void get_commands() {
   uint8_t check = 0;
+  uint8_t recv_data[16];
+  memset(recv_data, 0, sizeof(recv_data));
+
   if (!Serial.available())
     return;
+
   command = Serial.read();
+  packet_length = packet_size[command];
+
+  // checksum verification
+  // -1, the last element is checksum
+  for (int i = 0; i < packet_length - 1; i++)
+    recv_data[i] = Serial.read();
+
+  uint8_t computed_checksum = crc8(recv_data, packet_length);
+
+  checksum = Serial.read();
+  // TODO make a return code
+  if (checksum != computed_checksum)
+    return;
+
   switch (command) {
-  case 1:
-  //move motors
-    commandedX = Serial.read();
-    commandedY = Serial.read();
-    commandedR = Serial.read();
-    checksum = Serial.read();
+    case 1:
+      //move motors case
+      commandedX = recv_data[0];
+      commandedY = recv_data[1];
+      commandedR = recv_data[2];
 
-    check = command ^ commandedX ^ commandedY ^ commandedR;
-    if (!checksum_verification(check))
-      return;
-
-    commandedX = map(commandedX, 0, 255, 127, -127);
-    commandedY = map(commandedY, 0, 255, -127, 127);
-    commandedR = map(commandedR, 0, 255, 127, -127);
-    break;
-  case 2:
-      //change gait
-      uint8_t temp_gait = Serial.read();
-      checksum = Serial.read();
-
-      check = command ^ temp_gait;
-      if (!checksum_verification(check))
-        return;
-
-      gait = temp_gait;
+      // TODO shift responsability from the uC to the SBC
+      commandedX = map(commandedX, 0, 255, 127, -127);
+      commandedY = map(commandedY, 0, 255, -127, 127);
+      commandedR = map(commandedR, 0, 255, 127, -127);
       break;
-    }
-
+    case 2:
+      //change gait case
+      gait = recv_data[0];
+      break;
+  }
 }
 
 //***********************************************************************
-// CRC verification
+// CRC-8-ITU verification
 //***********************************************************************
-bool checksum_verification(uint8_t check){
-  //TODO CRC-8 AUTOSAR
-    if (checksum != check)
-    {
-      Serial.println("Error of checksum");
-      return false;
+uint8_t crc8(const uint8_t* data, size_t length) {
+  uint8_t crc = 0xFF;  // Initial value
+  for (size_t i = 0; i < length; i++) {
+    crc ^= data[i];                // XOR byte into least sig. byte of crc
+    for (int j = 0; j < 8; j++) {  // Loop over each bit
+      if (crc & 0x80) {            // If the uppermost bit is 1...
+        crc = (crc << 1) ^ 0x07;   // ...shift left and XOR with the polynomial
+      } else {
+        crc <<= 1;  // Otherwise, just shift left
+      }
     }
-    return true;
+  }
+  return crc;
 }
+
 
 //***********************************************************************
 // Process gamepad controller inputs
 //***********************************************************************
 void process_gamepad() {
+  // TODO replace all PS2 code to serial
   if (ps2x.ButtonPressed(PSB_PAD_DOWN))  //stop & select gait 0
   {
     mode = 0;

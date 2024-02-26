@@ -44,3 +44,9 @@ const float BODY_Z[6] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 const int COXA_CAL[6] = { 0, 0, 0, 0, 0, 0 };  //servo calibration constants
 const int FEMUR_CAL[6] = { 0, 0, 0, 0, 0, 0 };
 const int TIBIA_CAL[6] = { 0, 0, 0, 0, 0, 0 };
+
+uint8_t packet_size[] = {
+  0,  // not valid
+  4,  // move motors
+  2   // change gait
+}
