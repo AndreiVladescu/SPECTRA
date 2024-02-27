@@ -1,3 +1,7 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <VL53L0X.h>
+
 #define TOF1_SHUT_PIN 18
 #define TOF2_SHUT_PIN 22
 #define TOF3_SHUT_PIN 24

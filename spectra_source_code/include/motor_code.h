@@ -1,5 +1,11 @@
-// Different gait movement
+#include <Arduino.h>
+#include <Servo.h>
+#include <math.h>
+#include <PS2X_lib.h> //reference: http://www.billporter.info/
 
+#include "const_data.h"
+
+// Different gait movement
 void tripod_gait();
 void wave_gait();
 void ripple_gait();
@@ -19,9 +25,9 @@ void compute_amplitudes();
 #ifndef MOTOR_CODE_H
 #define MOTOR_CODE_H
 
-extern PS2X ps2x;  //PS2 gamepad controller
+extern PS2X ps2x; // PS2 gamepad controller
 
-extern Servo coxa1_servo;  //18 servos
+extern Servo coxa1_servo; // 18 servos
 extern Servo femur1_servo;
 extern Servo tibia1_servo;
 extern Servo coxa2_servo;
@@ -40,23 +46,22 @@ extern Servo coxa6_servo;
 extern Servo femur6_servo;
 extern Servo tibia6_servo;
 
-
-extern float L0, L3;  //inverse kinematics variables
+extern float L0, L3; // inverse kinematics variables
 extern float gamma_femur;
 extern float phi_tibia;
 extern float phi_femur;
 extern float theta_tibia;
-extern float theta_femur; 
+extern float theta_femur;
 extern float theta_coxa;
 extern int leg1_IK_control;
-extern int leg6_IK_control;  //leg lift mode variables
+extern int leg6_IK_control; // leg lift mode variables
 extern float leg1_coxa;
 extern float leg1_femur;
 extern float leg1_tibia;
-extern float leg6_coxa; 
+extern float leg6_coxa;
 extern float leg6_femur;
 extern float leg6_tibia;
-extern int leg_num;  //positioning and walking variables
+extern int leg_num; // positioning and walking variables
 extern int z_height_LED_color;
 extern int totalX;
 extern int totalY;
@@ -70,7 +75,7 @@ extern int commandedX;
 extern int commandedY;
 extern int commandedR;
 extern int translateX;
-extern int translateY; 
+extern int translateY;
 extern int translateZ;
 extern float step_height_multiplier;
 extern float strideX;
@@ -94,21 +99,21 @@ extern float offset_Z[6];
 extern float current_X[6];
 extern float current_Y[6];
 extern float current_Z[6];
-extern int tripod_case[6];  //for tripod gait walking
-extern int ripple_case[6];         //for ripple gait
-extern int wave_case[6];           //for wave gait
-extern int tetrapod_case[6];       //for tetrapod gait
+extern int tripod_case[6];   // for tripod gait walking
+extern int ripple_case[6];   // for ripple gait
+extern int wave_case[6];     // for wave gait
+extern int tetrapod_case[6]; // for tetrapod gait
 
-extern int temp;  //mode and control variables
+extern int temp; // mode and control variables
 extern int mode;
 extern int gait;
 extern int gait_speed;
 extern int gait_LED_color;
 extern int reset_position;
 extern int capture_offsets;
-extern uint8_t command;    //current read command
-extern uint8_t checksum;   //checksum read from command
-extern int gamepad_error;  //gamepad variables
+extern uint8_t command;   // current read command
+extern uint8_t checksum;  // checksum read from command
+extern int gamepad_error; // gamepad variables
 extern byte gamepad_type;
 extern byte gamepad_vibrate;
 

@@ -1,22 +1,20 @@
-#include <Arduino.h>
-#include <Wire.h>
-#include <VL53L0X.h>
-
 #include "tof_sensors.h"
 
-typedef struct TOF_Struct{
+typedef struct TOF_Struct
+{
   VL53L0X sensors[6];
   float distance[6];
   unsigned long timestamp;
   const size_t sensor_number = 6;
-};
+} TOF_Struct;
 
 TOF_Struct tof_struct;
 
 void init_tof_sensors()
 {
 
-  for (int i=0;i<tof_struct.sensor_number;i++){
+  for (int i = 0; i < tof_struct.sensor_number; i++)
+  {
     tof_struct.distance[i] = 0;
   }
   tof_struct.timestamp = 0;
@@ -72,15 +70,17 @@ void init_tof_sensors()
   tof_struct.sensors[5].init(true);
   tof_struct.sensors[5].setAddress((uint8_t)06);
   delay(50);
-  
-  for (int i=0;i<tof_struct.sensor_number;i++){
+
+  for (int i = 0; i < tof_struct.sensor_number; i++)
+  {
     tof_struct.sensors[i].startContinuous();
   }
 }
 
 void get_tof_readings()
 {
-  for (int i=0;i<tof_struct.sensor_number;i++){
+  for (int i = 0; i < tof_struct.sensor_number; i++)
+  {
     tof_struct.distance[i] = tof_struct.sensors[i].readRangeContinuousMillimeters();
   }
   tof_struct.timestamp = millis();
