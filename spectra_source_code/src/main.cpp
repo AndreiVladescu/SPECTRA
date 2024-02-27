@@ -234,7 +234,7 @@ void get_commands()
 
   switch (command)
   {
-  case 1:
+  case packet_type::move_motors:
     // move motors case
     commandedX = recv_data[0];
     commandedY = recv_data[1];
@@ -245,7 +245,7 @@ void get_commands()
     commandedY = map(commandedY, 0, 255, -127, 127);
     commandedR = map(commandedR, 0, 255, 127, -127);
     break;
-  case 2:
+  case packet_type::change_gait:
     // change gait case
     gait = recv_data[0];
     break;
