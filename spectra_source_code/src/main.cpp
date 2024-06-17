@@ -2,7 +2,6 @@
 // Includes
 //***********************************************************************
 #include <Arduino.h>
-#include <PS2X_lib.h> //reference: http://www.billporter.info/
 #include <Servo.h>
 #include <math.h>
 
@@ -67,8 +66,6 @@ int tetrapod_case[6] = {1, 3, 2, 1, 2, 3}; // for tetrapod gait
 //***********************************************************************
 // Object Declarations
 //***********************************************************************
-PS2X ps2x; // PS2 gamepad controller
-
 Servo coxa1_servo; // 18 servos
 Servo femur1_servo;
 Servo tibia1_servo;
@@ -93,7 +90,6 @@ Servo tibia6_servo;
 //***********************************************************************
 void get_commands();
 uint8_t crc8(const uint8_t *data, size_t length);
-void process_gamepad();
 
 //***********************************************************************
 // Initialization Routine
@@ -195,13 +191,6 @@ void loop()
       if (gait == 3)
         tetrapod_gait(); // walk using gait 3
     }
-    if (mode == 2)
-      translate_control(); // joystick control x-y-z mode
-    if (mode == 3)
-      rotate_control(); // joystick control y-p-r mode
-    if (mode == 4)
-      one_leg_lift(); // one leg lift mode
-    if (mode == 99)
       set_all_90(); // set all servos to 90 degrees mode
   }
 }
@@ -274,93 +263,4 @@ uint8_t crc8(const uint8_t *data, size_t length)
     }
   }
   return crc;
-}
-
-//***********************************************************************
-// Process gamepad controller inputs
-//***********************************************************************
-void process_gamepad()
-{
-  // TODO replace all PS2 code to serial
-  if (ps2x.ButtonPressed(PSB_PAD_DOWN)) // stop & select gait 0
-  {
-    mode = 0;
-    gait = 0;
-    reset_position = true;
-  }
-  if (ps2x.ButtonPressed(PSB_PAD_LEFT)) // stop & select gait 1
-  {
-    mode = 0;
-    gait = 1;
-    reset_position = true;
-  }
-  if (ps2x.ButtonPressed(PSB_PAD_UP)) // stop & select gait 2
-  {
-    mode = 0;
-    gait = 2;
-    reset_position = true;
-  }
-  if (ps2x.ButtonPressed(PSB_PAD_RIGHT)) // stop & select gait 3
-  {
-    mode = 0;
-    gait = 3;
-    reset_position = true;
-  }
-  if (mode == 0) // display selected gait on LEDs if button held
-  {
-    // if (batt_LEDs > 3) gait_LED_color = 0;  //display gait using red LEDs if battery strong
-    // else gait_LED_color = 1;                //display gait using green LEDs if battery weak
-  }
-  if (ps2x.ButtonPressed(PSB_TRIANGLE)) // select walk mode
-  {
-    mode = 1;
-    reset_position = true;
-  }
-  if (ps2x.Button(PSB_TRIANGLE)) // vibrate controller if walk button held
-    gamepad_vibrate = 64;
-  else
-    gamepad_vibrate = 0;
-  if (ps2x.ButtonPressed(PSB_SQUARE)) // control x-y-z with joysticks mode
-  {
-    mode = 2;
-    reset_position = true;
-  }
-  if (ps2x.ButtonPressed(PSB_CIRCLE)) // control y-p-r with joysticks mode
-  {
-    mode = 3;
-    reset_position = true;
-  }
-  if (ps2x.ButtonPressed(PSB_CROSS)) // one leg lift mode
-  {
-    mode = 4;
-    reset_position = true;
-  }
-  if (ps2x.ButtonPressed(PSB_START)) // change gait speed
-  {
-    if (gait_speed == 0)
-      gait_speed = 1;
-    else
-      gait_speed = 0;
-  }
-  if (ps2x.ButtonPressed(PSB_SELECT)) // set all servos to 90 degrees for calibration
-  {
-    mode = 99;
-  }
-  if ((ps2x.ButtonPressed(PSB_L1)) || (ps2x.ButtonPressed(PSB_R1)))
-  {
-    // capture offsets in translate, rotate, and translate/rotate modes
-    capture_offsets = true;
-  }
-  if ((ps2x.ButtonPressed(PSB_L2)) || (ps2x.ButtonPressed(PSB_R2)))
-  {
-    for (leg_num = 0; leg_num < 6; leg_num++) // clear offsets
-    {
-      offset_X[leg_num] = 0;
-      offset_Y[leg_num] = 0;
-      offset_Z[leg_num] = 0;
-    }
-    leg1_IK_control = true; // reset leg lift first pass flags
-    leg6_IK_control = true;
-    step_height_multiplier = 1.0; // reset step height multiplier
-  }
 }
