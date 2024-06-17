@@ -231,14 +231,16 @@ void get_commands()
     commandedY = recv_data[1];
     commandedR = recv_data[2];
 
-    // TODO shift responsability from the uC to the SBC
-    commandedX = map(commandedX, 0, 255, 127, -127);
-    commandedY = map(commandedY, 0, 255, -127, 127);
-    commandedR = map(commandedR, 0, 255, 127, -127);
+    // commandedX = map(commandedX, 0, 255, 127, -127);
+    // commandedY = map(commandedY, 0, 255, -127, 127);
+    // commandedR = map(commandedR, 0, 255, 127, -127);
     break;
   case packet_type::change_gait:
     // change gait case
     gait = recv_data[0];
+    break;
+  case packet_type::rotate_body:
+    commandedR = recv_data[0];
     break;
   }
 }

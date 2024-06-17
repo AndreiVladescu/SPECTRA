@@ -395,6 +395,7 @@ void rotate_control(float angle)
     }
   }
 }
+
 //***********************************************************************
 // Set all servos to 90 degrees
 // Note: this is useful for calibration/alignment of the servos

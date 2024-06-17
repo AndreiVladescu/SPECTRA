@@ -50,11 +50,12 @@ const int TIBIA_CAL[6] = {0, 0, 0, 0, 0, 0};
 const uint8_t packet_size[] = {
     0, // not valid
     4, // move motors
-    2  // change gait
+    2  // change gait, rotate body
 };
 
 typedef enum packet_type
 {
   move_motors = 1,
-  change_gait = 2
+  change_gait = 2,
+  rotate_body = 3
 };
