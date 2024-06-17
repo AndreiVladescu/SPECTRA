@@ -8,8 +8,6 @@
 
 uint8_t initGPS();
 
-uint8_t getGPSDataMinimal(double* gps_lat, double* gps_lng);
-uint8_t getGPSData();
-TinyGPSPlus* getInstance();
-
-uint8_t sendGPSData();
+uint8_t getGPSDataMinimal(double *gps_lat, double *gps_lng);
+TinyGPSPlus *getInstance();
+void navigateToPoint(const double dst_lat, const double dst_long, const float heading, int8_t *move_x, int8_t *move_y);

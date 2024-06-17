@@ -362,7 +362,39 @@ void compute_amplitudes()
     amplitudeZ = step_height_multiplier * (strideY + rotOffsetY) / 4.0;
 }
 
+//***********************************************************************
+// Body rotate with controller (z axis)
+//***********************************************************************
+void rotate_control(float angle)
+{
+  // Convert input angle to radians as trigonometric functions expect radians
+  float angleRad = angle * PI / 180.0;
 
+  // compute rotation sin/cos values for the given angle
+  float sinRotZ = sin(angleRad);
+  float cosRotZ = cos(angleRad);
+
+  for (int leg_num = 0; leg_num < 6; leg_num++)
+  {
+    // compute total distance from center of body to toe (unchanged)
+    float totalX = HOME_X[leg_num] + BODY_X[leg_num];
+    float totalY = HOME_Y[leg_num] + BODY_Y[leg_num];
+    float totalZ = HOME_Z[leg_num] + BODY_Z[leg_num];
+
+    // perform rotation around Z-axis using the new angle
+    float rotOffsetZ = totalX * sinRotZ - totalY * cosRotZ + totalZ - totalZ;
+
+    // Calculate foot positions to achieve desired rotation
+    current_Z[leg_num] = HOME_Z[leg_num] + rotOffsetZ;
+
+    // lock in offsets if commanded (unchanged)
+    if (capture_offsets == true)
+    {
+      offset_Z[leg_num] = offset_Z[leg_num] + rotOffsetZ;
+      current_Z[leg_num] = HOME_Z[leg_num];
+    }
+  }
+}
 //***********************************************************************
 // Set all servos to 90 degrees
 // Note: this is useful for calibration/alignment of the servos

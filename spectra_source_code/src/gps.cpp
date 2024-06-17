@@ -37,3 +37,11 @@ TinyGPSPlus *getInstance()
 {
   return &gps;
 }
+
+void navigateToPoint(const double dst_lat, const double dst_long, const float heading, int8_t *move_x, int8_t *move_y)
+{
+  double curr_lat, curr_long;
+  getGPSDataMinimal(&curr_lat, &curr_long);
+
+  double bearingToDest = gps.courseTo(curr_lat, curr_long, dst_lat, dst_long);
+}

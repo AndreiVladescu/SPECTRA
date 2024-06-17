@@ -11,6 +11,7 @@
 #include "motor_code.h"
 #include "gps.h"
 #include "battery_monitor.h"
+#include "imu.h"
 
 //***********************************************************************
 // Variable Declarations
@@ -85,6 +86,7 @@ Servo coxa6_servo;
 Servo femur6_servo;
 Servo tibia6_servo;
 
+extern MPU9250 mpu;
 //***********************************************************************
 // Defined functions
 //***********************************************************************
@@ -191,7 +193,7 @@ void loop()
       if (gait == 3)
         tetrapod_gait(); // walk using gait 3
     }
-      set_all_90(); // set all servos to 90 degrees mode
+    set_all_90(); // set all servos to 90 degrees mode
   }
 }
 
