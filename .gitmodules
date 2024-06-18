@@ -1,3 +1,0 @@
-[submodule "esp32_ew"]
-	path = esp32_ew
-	url = https://github.com/AndreiVladescu/ESP32-CC1101-EW
