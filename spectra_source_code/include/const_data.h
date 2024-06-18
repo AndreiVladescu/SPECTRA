@@ -56,6 +56,7 @@ const uint8_t packet_size[] = {
 };
 
 typedef enum packet_type
+
 {
   not_valid = 0,
   move_motors = 1,

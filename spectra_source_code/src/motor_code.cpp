@@ -32,6 +32,8 @@ void leg_IK(int leg_number, float X, float Y, float Z)
     case 0:
       if (leg1_IK_control == true) // flag for IK or manual control of leg
       {
+        SERCOM.println("Looping");
+
         theta_coxa = theta_coxa + 45.0; // compensate for leg mounting
         theta_coxa = constrain(theta_coxa, 0.0, 180.0);
         coxa1_servo.write(int(theta_coxa));

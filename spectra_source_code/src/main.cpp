@@ -101,7 +101,7 @@ void setup()
   // start serial
   SERCOM.begin(115200);
   SERCOM.setTimeout(10);
-  initGPS();
+  // initGPS();
 
   // attach servos
   coxa1_servo.attach(COXA1_SERVO, 610, 2400);
@@ -135,7 +135,7 @@ void setup()
 
   // initialize mode and gait variables
   mode = 1;
-  gait = 2;
+  gait = 0;
   gait_speed = 0;
   reset_position = true;
   leg1_IK_control = true;
@@ -147,13 +147,13 @@ void setup()
 //***********************************************************************
 void loop()
 {
+  commandedX = 45;
   // set up frame time
   currentTime = millis();
   if ((currentTime - previousTime) > FRAME_TIME_MS)
   {
     previousTime = currentTime;
-
-    get_commands();
+    // get_commands();
 
     // reset legs to home position when commanded
     if (reset_position == true)
@@ -185,7 +185,9 @@ void loop()
     if (mode == 1) // walking mode
     {
       if (gait == 0)
+      {
         tripod_gait(); // walk using gait 0
+      }
       if (gait == 1)
         wave_gait(); // walk using gait 1
       if (gait == 2)
@@ -193,7 +195,7 @@ void loop()
       if (gait == 3)
         tetrapod_gait(); // walk using gait 3
     }
-    set_all_90(); // set all servos to 90 degrees mode
+    // set_all_90(); // set all servos to 90 degrees mode
   }
 }
 
@@ -230,7 +232,7 @@ void get_commands()
     commandedX = recv_data[1];
     commandedY = recv_data[2];
     commandedR = recv_data[3];
-
+    Serial.println("Moving at " + String(commandedX) + " " + String(commandedY) + " " + String(commandedR));
     // commandedX = map(commandedX, 0, 255, 127, -127);
     // commandedY = map(commandedY, 0, 255, -127, 127);
     // commandedR = map(commandedR, 0, 255, 127, -127);
