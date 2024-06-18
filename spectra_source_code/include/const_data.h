@@ -33,7 +33,7 @@ const int TRAVEL = 30; // translate and rotate travel limit constant
 const long A12DEG = 209440; // 12 degrees in radians x 1,000,000
 const long A30DEG = 523599; // 30 degrees in radians x 1,000,000
 
-const int FRAME_TIME_MS = 20; // frame time (20msec = 50Hz)
+const int FRAME_TIME_MS = 40; // frame time (20msec = 50Hz)
 
 const float HOME_X[6] = {82.0, 0.0, -82.0, -82.0, 0.0, 82.0}; // coxa-to-toe home positions
 const float HOME_Y[6] = {82.0, 116.0, 82.0, -82.0, -116.0, -82.0};
@@ -56,7 +56,6 @@ const uint8_t packet_size[] = {
 };
 
 typedef enum packet_type
-
 {
   not_valid = 0,
   move_motors = 1,

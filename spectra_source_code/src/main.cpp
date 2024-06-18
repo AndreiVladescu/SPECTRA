@@ -147,13 +147,13 @@ void setup()
 //***********************************************************************
 void loop()
 {
-  commandedX = 45;
-  // set up frame time
+  // commandedX = 55;
+  //  set up frame time
   currentTime = millis();
   if ((currentTime - previousTime) > FRAME_TIME_MS)
   {
     previousTime = currentTime;
-    // get_commands();
+    get_commands();
 
     // reset legs to home position when commanded
     if (reset_position == true)
@@ -185,9 +185,7 @@ void loop()
     if (mode == 1) // walking mode
     {
       if (gait == 0)
-      {
         tripod_gait(); // walk using gait 0
-      }
       if (gait == 1)
         wave_gait(); // walk using gait 1
       if (gait == 2)
@@ -215,7 +213,7 @@ void get_commands()
 
   // checksum verification
   // -1, the last element is checksum
-  for (int i = 0; i < packet_length - 1; i++)
+  for (int i = 1; i < packet_length - 1; i++)
     recv_data[i] = SERCOM.read();
 
   // uint8_t computed_checksum = crc8(recv_data, packet_length);
@@ -229,9 +227,9 @@ void get_commands()
   {
   case packet_type::move_motors:
     // move motors case
-    commandedX = recv_data[1];
-    commandedY = recv_data[2];
-    commandedR = recv_data[3];
+    commandedX = int8_t(recv_data[1]);
+    commandedY = int8_t(recv_data[2]);
+    commandedR = int8_t(recv_data[3]);
     Serial.println("Moving at " + String(commandedX) + " " + String(commandedY) + " " + String(commandedR));
     // commandedX = map(commandedX, 0, 255, 127, -127);
     // commandedY = map(commandedY, 0, 255, -127, 127);
