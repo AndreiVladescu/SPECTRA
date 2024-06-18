@@ -1,6 +1,8 @@
+#include <Arduino.h>
+
 #include "const_data.h"
 #include <MPU9250.h>
-#include <Arduino.h>
+
 #include <Wire.h>
 
 uint8_t imuInitialize();

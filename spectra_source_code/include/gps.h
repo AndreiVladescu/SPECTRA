@@ -4,7 +4,7 @@
 
 #define PROCESS_GPS_INPUT false
 #define GPS_CH Serial3
-#define RPI_CH Serial1
+#define RPI_CH Serial2
 
 uint8_t initGPS();
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #define DEBUG true
-
+#define SERCOM Serial
 //***********************************************************************
 // Constant Declarations
 //***********************************************************************
@@ -50,12 +50,16 @@ const int TIBIA_CAL[6] = {0, 0, 0, 0, 0, 0};
 const uint8_t packet_size[] = {
     0, // not valid
     4, // move motors
-    2  // change gait, rotate body
+    2, // change gait
+    2, // rotate body
+    1, // get gps
 };
 
 typedef enum packet_type
 {
+  not_valid = 0,
   move_motors = 1,
   change_gait = 2,
-  rotate_body = 3
+  rotate_body = 3,
+  get_gps = 4
 };

@@ -99,8 +99,9 @@ uint8_t crc8(const uint8_t *data, size_t length);
 void setup()
 {
   // start serial
-  Serial.begin(115200);
-  Serial.setTimeout(10);
+  SERCOM.begin(115200);
+  SERCOM.setTimeout(10);
+  initGPS();
 
   // attach servos
   coxa1_servo.attach(COXA1_SERVO, 610, 2400);
@@ -146,7 +147,6 @@ void setup()
 //***********************************************************************
 void loop()
 {
-
   // set up frame time
   currentTime = millis();
   if ((currentTime - previousTime) > FRAME_TIME_MS)
@@ -205,31 +205,31 @@ void get_commands()
   uint8_t recv_data[16];
   memset(recv_data, 0, sizeof(recv_data));
 
-  if (!Serial.available())
+  if (!SERCOM.available())
     return;
 
-  command = Serial.read();
+  command = SERCOM.read();
   packet_length = packet_size[command];
 
   // checksum verification
   // -1, the last element is checksum
   for (int i = 0; i < packet_length - 1; i++)
-    recv_data[i] = Serial.read();
+    recv_data[i] = SERCOM.read();
 
-  uint8_t computed_checksum = crc8(recv_data, packet_length);
+  // uint8_t computed_checksum = crc8(recv_data, packet_length);
 
-  checksum = Serial.read();
+  // checksum = Serial.read();
   // TODO make a return code
-  if (checksum != computed_checksum)
-    return;
+  // if (checksum != computed_checksum)
+  //  return;
 
   switch (command)
   {
   case packet_type::move_motors:
     // move motors case
-    commandedX = recv_data[0];
-    commandedY = recv_data[1];
-    commandedR = recv_data[2];
+    commandedX = recv_data[1];
+    commandedY = recv_data[2];
+    commandedR = recv_data[3];
 
     // commandedX = map(commandedX, 0, 255, 127, -127);
     // commandedY = map(commandedY, 0, 255, -127, 127);
@@ -237,10 +237,22 @@ void get_commands()
     break;
   case packet_type::change_gait:
     // change gait case
-    gait = recv_data[0];
+    gait = recv_data[1];
     break;
   case packet_type::rotate_body:
-    commandedR = recv_data[0];
+    commandedR = recv_data[1];
+    break;
+  case packet_type::get_gps:
+    double gps_lat = 0, gps_lng = 0;
+    if (getGPSDataMinimal(&gps_lat, &gps_lng) == 1)
+      SERCOM.println("No GPS data");
+    else
+    {
+      SERCOM.print("Latitude: ");
+      SERCOM.println(gps_lat, 6);
+      SERCOM.print("Longitude: ");
+      SERCOM.println(gps_lng, 6);
+    }
     break;
   }
 }
